@@ -5,7 +5,7 @@
 
 use alloy_eips::eip4895::Withdrawal;
 use alloy_evm::{
-    block::{BlockExecutorFactory, BlockExecutorFor, ExecutableTx},
+    block::{BlockExecutorFactory, BlockExecutorFor, ExecutableTx, StateDB},
     eth::{EthBlockExecutionCtx, EthBlockExecutor, EthTxResult},
     precompiles::PrecompilesMap,
     revm::context::Block as _,
@@ -17,7 +17,6 @@ use reth_ethereum::{
     cli::interface::Cli,
     evm::{
         primitives::{
-            block::StateDB,
             execute::{BlockExecutionError, BlockExecutor, InternalBlockExecutionError},
             Evm, EvmEnv, EvmEnvFor, ExecutionCtxFor, InspectorFor, NextBlockEnvAttributes,
             OnStateHook,
