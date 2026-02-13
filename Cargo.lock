@@ -406,7 +406,8 @@ dependencies = [
 [[package]]
 name = "alloy-op-evm"
 version = "0.27.2"
-source = "git+https://github.com/0xforerunner/evm?rev=0833666#08336663fe05521c820d8e9fdb9b8e040587893e"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "874bfd6cacd006d05e70560f3af7faa670e31166203f9ba14fae4b169227360b"
 dependencies = [
  "alloy-consensus",
  "alloy-eips",
@@ -4830,7 +4831,6 @@ dependencies = [
  "base64 0.22.1",
  "bytes",
  "futures-channel",
- "futures-core",
  "futures-util",
  "http",
  "http-body",
