@@ -17,7 +17,10 @@
 
 extern crate alloc;
 
-use crate::execute::{BasicBlockBuilder, Executor};
+use crate::{
+    execute::{BasicBlockBuilder, Executor},
+    state::StateDB,
+};
 use alloc::vec::Vec;
 use alloy_eips::{
     eip2718::{EIP2930_TX_TYPE_ID, LEGACY_TX_TYPE_ID},
@@ -25,7 +28,7 @@ use alloy_eips::{
     eip4895::Withdrawals,
 };
 use alloy_evm::{
-    block::{BlockExecutorFactory, BlockExecutorFor, StateDB},
+    block::{BlockExecutorFactory, BlockExecutorFor},
     precompiles::PrecompilesMap,
 };
 use alloy_primitives::{Address, Bytes, B256};
@@ -317,7 +320,7 @@ pub trait ConfigureEvm: Clone + Debug + Send + Sync + Unpin {
         &'a self,
         evm: EvmFor<Self, DB, I>,
         ctx: <Self::BlockExecutorFactory as BlockExecutorFactory>::ExecutionCtx<'a>,
-    ) -> impl BlockExecutorFor<'a, Self::BlockExecutorFactory, &'a mut State<DB>, I>
+    ) -> impl BlockExecutorFor<'a, Self::BlockExecutorFactory, DB, I>
     where
         DB: StateDB + 'a,
         I: InspectorFor<Self, DB> + 'a,
@@ -330,8 +333,7 @@ pub trait ConfigureEvm: Clone + Debug + Send + Sync + Unpin {
         &'a self,
         db: DB,
         block: &'a SealedBlock<<Self::Primitives as NodePrimitives>::Block>,
-    ) -> Result<impl BlockExecutorFor<'a, Self::BlockExecutorFactory, &'a mut State<DB>>, Self::Error>
-    {
+    ) -> Result<impl BlockExecutorFor<'a, Self::BlockExecutorFactory, DB>, Self::Error> {
         let evm = self.evm_for_block(db, block.header())?;
         let ctx = self.context_for_block(block)?;
         Ok(self.create_executor(evm, ctx))
@@ -359,7 +361,7 @@ pub trait ConfigureEvm: Clone + Debug + Send + Sync + Unpin {
         ctx: <Self::BlockExecutorFactory as BlockExecutorFactory>::ExecutionCtx<'a>,
     ) -> impl BlockBuilder<
         Primitives = Self::Primitives,
-        Executor: BlockExecutorFor<'a, Self::BlockExecutorFactory, &'a mut State<DB>, I>,
+        Executor: BlockExecutorFor<'a, Self::BlockExecutorFactory, DB, I>,
     >
     where
         DB: StateDB + 'a,
@@ -411,7 +413,7 @@ pub trait ConfigureEvm: Clone + Debug + Send + Sync + Unpin {
     ) -> Result<
         impl BlockBuilder<
             Primitives = Self::Primitives,
-            Executor: BlockExecutorFor<'a, Self::BlockExecutorFactory, &'a mut State<DB>>,
+            Executor: BlockExecutorFor<'a, Self::BlockExecutorFactory, DB>,
         >,
         Self::Error,
     > {

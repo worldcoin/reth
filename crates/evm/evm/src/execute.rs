@@ -2,7 +2,7 @@
 
 use alloc::borrow::Cow;
 
-use crate::{ConfigureEvm, Database, OnStateHook, TxEnvFor};
+use crate::{state::StateDB, ConfigureEvm, Database, OnStateHook, TxEnvFor};
 use alloc::{boxed::Box, sync::Arc, vec::Vec};
 use alloy_consensus::{BlockHeader, Header};
 use alloy_eips::eip2718::WithEncoded;
